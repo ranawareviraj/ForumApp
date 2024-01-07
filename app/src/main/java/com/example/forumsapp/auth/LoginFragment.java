@@ -1,4 +1,4 @@
-package com.example.forumsapp;
+package com.example.forumsapp.auth;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,9 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.forumsapp.databinding.FragmentRegisterBinding;
+import com.example.forumsapp.databinding.FragmentLoginBinding;
 import com.example.forumsapp.models.Auth;
 
+import com.example.forumsapp.utils.Constansts;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,51 +30,51 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class RegisterFragment extends Fragment {
-    public RegisterFragment() {
+public class LoginFragment extends Fragment {
+
+    public LoginFragment() {
         // Required empty public constructor
     }
 
-    FragmentRegisterBinding binding;
+    FragmentLoginBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentRegisterBinding.inflate(inflater, container, false);
+        binding = FragmentLoginBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
+
     private final OkHttpClient client = new OkHttpClient();
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getActivity().setTitle("Register");
-        binding.buttonCancel.setOnClickListener(new View.OnClickListener() {
+        getActivity().setTitle(Constansts.LOGIN_FRAGMENT_TITLE);
+
+        binding.editTextEmail.setText("");
+        binding.editTextPassword.setText("");
+        binding.buttonCreateNewAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.gotoLogin();
+                mListener.gotoRegister();
             }
         });
-
-        binding.buttonSubmit.setOnClickListener(new View.OnClickListener() {
+        binding.buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String fname = binding.editTextFirstName.getText().toString();
-                String lname = binding.editTextLastName.getText().toString();
                 String email = binding.editTextEmail.getText().toString();
                 String password = binding.editTextPassword.getText().toString();
-                if(fname.isEmpty() || lname.isEmpty() || email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(getActivity(), "Please fill all fields", Toast.LENGTH_SHORT).show();
+                if (email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(getContext(), "Please enter email and password", Toast.LENGTH_SHORT).show();
                 } else {
-                    //perform the registration ..
                     //perform the login ..
                     RequestBody formBody = new FormBody.Builder()
-                            .add("email", email)
-                            .add("password", password)
-                            .add("fname", fname)
-                            .add("lname", lname)
+                            .add(Constansts.EMAIL, email)
+                            .add(Constansts.PASSWORD, password)
                             .build();
                     Request request = new Request.Builder()
-                            .url("https://www.theappsdr.com/api/login")
+                            .url(Constansts.LOGIN_API_URL)
                             .post(formBody)
                             .build();
 
@@ -85,7 +86,7 @@ public class RegisterFragment extends Fragment {
 
                         @Override
                         public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                            if(response.isSuccessful()){
+                            if (response.isSuccessful()) {
                                 String body = response.body().string();
                                 Log.d("demo", "onResponse: " + body);
                                 try {
@@ -105,32 +106,32 @@ public class RegisterFragment extends Fragment {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(getActivity(), "Unable to signup !!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), "Unable to login !!", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }
                         }
                     });
-
-
                 }
             }
         });
     }
 
-    RegisterListener mListener;
+    LoginListener mListener;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof RegisterListener) {
-            mListener = (RegisterListener) context;
+        if (context instanceof LoginListener) {
+            mListener = (LoginListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement RegisterListener");
+            throw new RuntimeException(context.toString() + " must implement LoginListener");
         }
     }
 
-    interface RegisterListener {
+    public interface LoginListener {
         void authSuccessful(Auth auth);
-        void gotoLogin();
+
+        void gotoRegister();
     }
 }

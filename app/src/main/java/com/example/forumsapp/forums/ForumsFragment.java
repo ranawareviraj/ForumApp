@@ -1,4 +1,4 @@
-package com.example.forumsapp;
+package com.example.forumsapp.forums;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,7 +18,6 @@ import com.example.forumsapp.databinding.ForumRowItemBinding;
 import com.example.forumsapp.databinding.FragmentForumsBinding;
 import com.example.forumsapp.models.Auth;
 import com.example.forumsapp.models.Forum;
-import com.example.forumsapp.models.Message;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,14 +32,17 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static com.example.forumsapp.utils.Constansts.*;
+
 public class ForumsFragment extends Fragment {
+
 
     public ForumsFragment() {
         // Required empty public constructor
     }
 
-    private static final String ARG_PARAM_AUTH = "ARG_PARAM_AUTH";
     Auth mAuth;
+
     public static ForumsFragment newInstance(Auth auth) {
         ForumsFragment fragment = new ForumsFragment();
         Bundle args = new Bundle();
@@ -56,6 +58,7 @@ public class ForumsFragment extends Fragment {
             mAuth = (Auth) getArguments().getSerializable(ARG_PARAM_AUTH);
         }
     }
+
     FragmentForumsBinding binding;
     ArrayList<Forum> forums = new ArrayList<>();
     ForumsAdapter adapter;
@@ -69,7 +72,7 @@ public class ForumsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getActivity().setTitle("Forums");
+        getActivity().setTitle(FORUMS_FRAGMENT_TITLE);
 
         binding.textViewWelcome.setText("Welcome " + mAuth.getUser_fname() + " " + mAuth.getUser_lname());
         binding.buttonCreateForum.setOnClickListener(new View.OnClickListener() {
@@ -94,10 +97,11 @@ public class ForumsFragment extends Fragment {
     }
 
     private final OkHttpClient client = new OkHttpClient();
+
     void getForums() {
         Request request = new Request.Builder()
-                .url("https://www.theappsdr.com/api/threads")
-                .addHeader("Authorization", "BEARER "  + mAuth.getToken())
+                .url(GET_FORUMS_URL)
+                .addHeader("Authorization", "BEARER " + mAuth.getToken())
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -109,7 +113,7 @@ public class ForumsFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
 
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
 
                     String body = response.body().string();
                     try {
@@ -161,6 +165,7 @@ public class ForumsFragment extends Fragment {
         class ForumsViewHolder extends RecyclerView.ViewHolder {
             Forum mForum;
             ForumRowItemBinding mBinding;
+
             public ForumsViewHolder(ForumRowItemBinding mBinding) {
                 super(mBinding.getRoot());
                 this.mBinding = mBinding;
@@ -172,21 +177,21 @@ public class ForumsFragment extends Fragment {
                 });
             }
 
-            void setupUI(Forum forum){
+            void setupUI(Forum forum) {
                 this.mForum = forum;
                 mBinding.textViewForumTitle.setText(mForum.getTitle());
                 mBinding.textViewForumCreatedAt.setText(forum.getCreated_at());
                 mBinding.textViewForumCreatorName.setText(forum.getCreatedByFname() + " " + forum.getCreatedByLname());
-                if(mForum.getCreatedByUserId().equals(mAuth.getUser_id())){
+                if (mForum.getCreatedByUserId().equals(mAuth.getUser_id())) {
                     mBinding.imageViewDeleteForum.setVisibility(View.VISIBLE);
                     mBinding.imageViewDeleteForum.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             //code to delete the forum..
-                            String url = "https://www.theappsdr.com/api/thread/delete/" + mForum.getThread_id();
+                            String url = DELETE_THREAD_URL + mForum.getThread_id();
                             Request request = new Request.Builder()
                                     .url(url)
-                                    .addHeader("Authorization", "BEARER "  + mAuth.getToken())
+                                    .addHeader("Authorization", "BEARER " + mAuth.getToken())
                                     .build();
 
                             client.newCall(request).enqueue(new Callback() {
@@ -197,7 +202,7 @@ public class ForumsFragment extends Fragment {
 
                                 @Override
                                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                                    if(response.isSuccessful()){
+                                    if (response.isSuccessful()) {
                                         getActivity().runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
@@ -227,6 +232,7 @@ public class ForumsFragment extends Fragment {
     }
 
     ForumsFragmentListener mListener;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -237,9 +243,11 @@ public class ForumsFragment extends Fragment {
         }
     }
 
-    interface ForumsFragmentListener {
+    public interface ForumsFragmentListener {
         void logout();
+
         void gotoCreateForum();
+
         void gotoForumMessages(Forum forum);
     }
 }

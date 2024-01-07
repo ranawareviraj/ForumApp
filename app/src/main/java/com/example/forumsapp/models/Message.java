@@ -1,5 +1,6 @@
 package com.example.forumsapp.models;
 
+import com.example.forumsapp.utils.Constansts;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,26 +12,13 @@ public class Message {
     }
 
     public Message(JSONObject jsonObject) throws JSONException {
-        //TODO: parse the json object
-         /*
-    {
-            "created_by": {
-                "fname": "Bob",
-                "lname": "Smith",
-                "user_id": 1
-            },
-            "message_id": 4,
-            "message": "testing message",
-            "created_at": "2023-02-22 19:36:32"
-        },
-     */
-        this.message_id = jsonObject.getString("message_id");
-        this.message = jsonObject.getString("message");
-        this.created_at = jsonObject.getString("created_at");
+        this.message_id = jsonObject.getString(Constansts.MESSAGE_ID);
+        this.message = jsonObject.getString(Constansts.MESSAGE);
+        this.created_at = jsonObject.getString(Constansts.CREATED_AT);
 
-        this.createdByFname = jsonObject.getJSONObject("created_by").getString("fname");
-        this.createdByLname = jsonObject.getJSONObject("created_by").getString("lname");
-        this.createdByUserId = jsonObject.getJSONObject("created_by").getString("user_id");
+        this.createdByFname = jsonObject.getJSONObject(Constansts.CREATED_BY).getString(Constansts.FNAME);
+        this.createdByLname = jsonObject.getJSONObject(Constansts.CREATED_BY).getString(Constansts.LNAME);
+        this.createdByUserId = jsonObject.getJSONObject(Constansts.CREATED_BY).getString(Constansts.USER_ID);
 
     }
 

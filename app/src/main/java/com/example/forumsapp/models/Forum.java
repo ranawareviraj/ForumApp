@@ -1,5 +1,6 @@
 package com.example.forumsapp.models;
 
+import com.example.forumsapp.utils.Constansts;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,25 +14,14 @@ public class Forum implements Serializable {
     }
 
     public Forum(JSONObject jsonObject) throws JSONException {
-        /*
-     {
-            "created_by": {
-                "fname": "Bob",
-                "lname": "Smith",
-                "user_id": 1
-            },
-            "thread_id": 37,
-            "title": "aj",
-            "created_at": "2023-02-23 20:56:16"
-        },
-     */
-        this.thread_id = jsonObject.getString("thread_id");
-        this.title = jsonObject.getString("title");
-        this.created_at = jsonObject.getString("created_at");
 
-        this.createdByFname = jsonObject.getJSONObject("created_by").getString("fname");
-        this.createdByLname = jsonObject.getJSONObject("created_by").getString("lname");
-        this.createdByUserId = jsonObject.getJSONObject("created_by").getString("user_id");
+        this.thread_id = jsonObject.getString(Constansts.THREAD_ID);
+        this.title = jsonObject.getString(Constansts.TITLE);
+        this.created_at = jsonObject.getString(Constansts.CREATED_AT);
+
+        this.createdByFname = jsonObject.getJSONObject(Constansts.CREATED_BY).getString(Constansts.FNAME);
+        this.createdByLname = jsonObject.getJSONObject(Constansts.CREATED_BY).getString(Constansts.LNAME);
+        this.createdByUserId = jsonObject.getJSONObject(Constansts.CREATED_BY).getString(Constansts.USER_ID);
 
     }
 

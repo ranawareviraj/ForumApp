@@ -5,8 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 
+import com.example.forumsapp.auth.LoginFragment;
+import com.example.forumsapp.auth.RegisterFragment;
+import com.example.forumsapp.forums.CreateForumFragment;
+import com.example.forumsapp.forums.ForumMessagesFragment;
+import com.example.forumsapp.forums.ForumsFragment;
 import com.example.forumsapp.models.Auth;
 import com.example.forumsapp.models.Forum;
 import com.google.gson.Gson;

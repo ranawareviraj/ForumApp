@@ -1,5 +1,6 @@
 package com.example.forumsapp.models;
 
+import com.example.forumsapp.utils.Constansts;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -7,18 +8,17 @@ import java.io.Serializable;
 
 public class Auth implements Serializable {
 
-
-    public String status, token, user_id, user_fname, user_lname;
+    private String status, token, user_id, user_fname, user_lname;
 
     public Auth() {
     }
 
     public Auth(JSONObject jsonObject) throws JSONException {
-        this.status = jsonObject.getString("status");
-        this.token = jsonObject.getString("token");
-        this.user_id = jsonObject.getString("user_id");
-        this.user_fname = jsonObject.getString("user_fname");
-        this.user_lname = jsonObject.getString("user_lname");
+        this.status = jsonObject.getString(Constansts.STATUS);
+        this.token = jsonObject.getString(Constansts.TOKEN);
+        this.user_id = jsonObject.getString(Constansts.USER_ID);
+        this.user_fname = jsonObject.getString(Constansts.USER_FNAME);
+        this.user_lname = jsonObject.getString(Constansts.USER_LNAME);
     }
 
     public String getStatus() {

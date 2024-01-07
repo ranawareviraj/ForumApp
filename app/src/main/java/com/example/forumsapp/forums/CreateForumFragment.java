@@ -1,4 +1,4 @@
-package com.example.forumsapp;
+package com.example.forumsapp.forums;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,6 +18,7 @@ import com.example.forumsapp.models.Auth;
 
 import java.io.IOException;
 
+import com.example.forumsapp.utils.Constansts;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -26,13 +27,17 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.example.forumsapp.utils.Constansts.ARG_PARAM_AUTH;
+
 public class CreateForumFragment extends Fragment {
+
     public CreateForumFragment() {
         // Required empty public constructor
     }
 
-    private static final String ARG_PARAM_AUTH = "ARG_PARAM_AUTH";
+
     Auth mAuth;
+
     public static CreateForumFragment newInstance(Auth auth) {
         CreateForumFragment fragment = new CreateForumFragment();
         Bundle args = new Bundle();
@@ -50,6 +55,7 @@ public class CreateForumFragment extends Fragment {
     }
 
     FragmentCreateForumBinding binding;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentCreateForumBinding.inflate(inflater, container, false);
@@ -57,10 +63,11 @@ public class CreateForumFragment extends Fragment {
     }
 
     private final OkHttpClient client = new OkHttpClient();
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getActivity().setTitle("Create Forum");
+        getActivity().setTitle(Constansts.CREATE_FORUM_FRAGMENT_TITLE);
         binding.buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,15 +79,15 @@ public class CreateForumFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String title = binding.editTextForumTitle.getText().toString();
-                if(title.isEmpty()) {
+                if (title.isEmpty()) {
                     Toast.makeText(getContext(), "Title is required", Toast.LENGTH_SHORT).show();
                 } else {
                     RequestBody formBody = new FormBody.Builder()
                             .add("title", title)
                             .build();
                     Request request = new Request.Builder()
-                            .url("https://www.theappsdr.com/api/thread/add")
-                            .addHeader("Authorization", "BEARER "  + mAuth.getToken())
+                            .url(Constansts.ADD_THREAD_URL)
+                            .addHeader("Authorization", "BEARER " + mAuth.getToken())
                             .post(formBody)
                             .build();
 
@@ -92,7 +99,7 @@ public class CreateForumFragment extends Fragment {
 
                         @Override
                         public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                            if(response.isSuccessful()){
+                            if (response.isSuccessful()) {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -121,8 +128,9 @@ public class CreateForumFragment extends Fragment {
         }
     }
 
-    interface CreateForumListener {
+    public interface CreateForumListener {
         void cancelForumCreate();
+
         void completedForumCreate();
     }
 }
