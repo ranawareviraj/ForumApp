@@ -14,17 +14,6 @@ public class Auth implements Serializable {
     }
 
     public Auth(JSONObject jsonObject) throws JSONException {
-         /*
-    {
-    "status": "ok",
-    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NzcxOTAzNTcsImV4cCI6MTcwODcyNjM1NywianRpIjoiMzh0NnVaNUFicTY3TVlrRnBSbFdSZiIsInVzZXIiOjF9.aH5SSGc82zZcqj9cEYdYmSBbJ9_-0t2fGuS7zDpuHFY",
-    "user_id": 1,
-    "user_email": "b@b.com",
-    "user_fname": "Bob",
-    "user_lname": "Smith",
-    "user_role": "USER"
-}
-     */
         this.status = jsonObject.getString("status");
         this.token = jsonObject.getString("token");
         this.user_id = jsonObject.getString("user_id");

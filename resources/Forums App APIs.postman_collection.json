@@ -1,0 +1,306 @@
+{
+	"info": {
+		"_postman_id": "4723a994-d540-4ce1-a4e0-5b860db6648d",
+		"name": "Forums App APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5645479"
+	},
+	"item": [
+		{
+			"name": "/api/login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "test@test.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "test12345",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://www.theappsdr.com/api/login",
+					"protocol": "https",
+					"host": [
+						"www",
+						"theappsdr",
+						"com"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "z@z.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "test123",
+							"type": "text"
+						},
+						{
+							"key": "fname",
+							"value": "Zak",
+							"type": "text"
+						},
+						{
+							"key": "lname",
+							"value": "Smith",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://www.theappsdr.com/api/signup",
+					"protocol": "https",
+					"host": [
+						"www",
+						"theappsdr",
+						"com"
+					],
+					"path": [
+						"api",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/threads",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NzcwOTA0MjIsImV4cCI6MTcwODYyNjQyMiwianRpIjoiNnlxUXIwa21HWGtDdUVDdjBnbTFiQiIsInVzZXIiOjF9.4TmrtRlM02UH9iz8eKBXjicCUNxOdxc3GJLZL4tqb8s"
+					}
+				],
+				"url": {
+					"raw": "https://www.theappsdr.com/api/threads",
+					"protocol": "https",
+					"host": [
+						"www",
+						"theappsdr",
+						"com"
+					],
+					"path": [
+						"api",
+						"threads"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/thread/add",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NzcwOTA0MjIsImV4cCI6MTcwODYyNjQyMiwianRpIjoiNnlxUXIwa21HWGtDdUVDdjBnbTFiQiIsInVzZXIiOjF9.4TmrtRlM02UH9iz8eKBXjicCUNxOdxc3GJLZL4tqb8s"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "title",
+							"value": "This is a test thread",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://www.theappsdr.com/api/thread/add",
+					"protocol": "https",
+					"host": [
+						"www",
+						"theappsdr",
+						"com"
+					],
+					"path": [
+						"api",
+						"thread",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/thread/delete/{thread_id}",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NzcwOTA0MjIsImV4cCI6MTcwODYyNjQyMiwianRpIjoiNnlxUXIwa21HWGtDdUVDdjBnbTFiQiIsInVzZXIiOjF9.4TmrtRlM02UH9iz8eKBXjicCUNxOdxc3GJLZL4tqb8s"
+					}
+				],
+				"url": {
+					"raw": "https://www.theappsdr.com/api/thread/delete/1",
+					"protocol": "https",
+					"host": [
+						"www",
+						"theappsdr",
+						"com"
+					],
+					"path": [
+						"api",
+						"thread",
+						"delete",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/messages/{thread_id}",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NzcwOTA0MjIsImV4cCI6MTcwODYyNjQyMiwianRpIjoiNnlxUXIwa21HWGtDdUVDdjBnbTFiQiIsInVzZXIiOjF9.4TmrtRlM02UH9iz8eKBXjicCUNxOdxc3GJLZL4tqb8s"
+					}
+				],
+				"url": {
+					"raw": "https://www.theappsdr.com/api/messages/2",
+					"protocol": "https",
+					"host": [
+						"www",
+						"theappsdr",
+						"com"
+					],
+					"path": [
+						"api",
+						"messages",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/message/add",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NzcwOTA0MjIsImV4cCI6MTcwODYyNjQyMiwianRpIjoiNnlxUXIwa21HWGtDdUVDdjBnbTFiQiIsInVzZXIiOjF9.4TmrtRlM02UH9iz8eKBXjicCUNxOdxc3GJLZL4tqb8s"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "message",
+							"value": "testing message",
+							"type": "text"
+						},
+						{
+							"key": "thread_id",
+							"value": "2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://www.theappsdr.com/api/message/add",
+					"protocol": "https",
+					"host": [
+						"www",
+						"theappsdr",
+						"com"
+					],
+					"path": [
+						"api",
+						"message",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/api/message/delete/{message_id}",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "BEARER eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NzcwOTA0MjIsImV4cCI6MTcwODYyNjQyMiwianRpIjoiNnlxUXIwa21HWGtDdUVDdjBnbTFiQiIsInVzZXIiOjF9.4TmrtRlM02UH9iz8eKBXjicCUNxOdxc3GJLZL4tqb8s"
+					}
+				],
+				"url": {
+					"raw": "https://www.theappsdr.com/api/message/delete/2",
+					"protocol": "https",
+					"host": [
+						"www",
+						"theappsdr",
+						"com"
+					],
+					"path": [
+						"api",
+						"message",
+						"delete",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
