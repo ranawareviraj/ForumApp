@@ -1,4 +1,4 @@
-# ForumsApp
+# Forum App
 
 ## Introduction
 A forums application that allows users to create forums and post messages in these forums. It uses the OkHttp library in this app in order to make all the http connections and API
