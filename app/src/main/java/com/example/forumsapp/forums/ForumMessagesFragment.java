@@ -87,52 +87,45 @@ public class ForumMessagesFragment extends Fragment {
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerView.setAdapter(adapter);
         getMessages();
-        binding.buttonSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String message = binding.editTextMessage.getText().toString();
-                binding.editTextMessage.setText("");
-                if (message.isEmpty()) {
-                    Toast.makeText(getContext(), "Message is required", Toast.LENGTH_SHORT).show();
-                } else {
-                    RequestBody formBody = new FormBody.Builder()
-                            .add(Constansts.THREAD_ID, mForum.getThread_id())
-                            .add(Constansts.MESSAGE, message)
-                            .build();
-                    Request request = new Request.Builder()
-                            .url(Constansts.ADD_MESSAGE_URL)
-                            .addHeader(Constansts.AUTHORIZATION, "BEARER " + mAuth.getToken())
-                            .post(formBody)
-                            .build();
+        binding.buttonSubmit.setOnClickListener(view1 -> {
+            String message = binding.editTextMessage.getText().toString();
+            binding.editTextMessage.setText("");
+            if (message.isEmpty()) {
+                Toast.makeText(getContext(), "Message is required", Toast.LENGTH_SHORT).show();
+            } else {
+                RequestBody formBody = new FormBody.Builder()
+                        .add(Constansts.THREAD_ID, mForum.getThread_id())
+                        .add(Constansts.MESSAGE, message)
+                        .build();
+                Request request = new Request.Builder()
+                        .url(Constansts.ADD_MESSAGE_URL)
+                        .addHeader(Constansts.AUTHORIZATION, "BEARER " + mAuth.getToken())
+                        .post(formBody)
+                        .build();
 
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                            e.printStackTrace();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response)
+                            throws IOException {
+                        if (response.isSuccessful()) {
+                            getActivity().runOnUiThread(() -> getMessages());
+                        } else {
+
                         }
-
-                        @Override
-                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                            if (response.isSuccessful()) {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        getMessages();
-                                    }
-                                });
-                            } else {
-
-                            }
-                        }
-                    });
-                }
+                    }
+                });
             }
         });
     }
 
     void getMessages() {
         Request request = new Request.Builder()
-                .url("https://www.theappsdr.com/api/messages/" + mForum.getThread_id())
+                .url(Constansts.GET_MESSAGES_URL + mForum.getThread_id())
                 .addHeader("Authorization", "BEARER " + mAuth.getToken())
                 .build();
 

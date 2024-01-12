@@ -50,71 +50,56 @@ public class RegisterFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle(Constansts.REGISTER_FRAGMENT_TITLE);
-        binding.buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.gotoLogin();
-            }
-        });
+        binding.buttonCancel.setOnClickListener(view1 -> mListener.gotoLogin());
 
-        binding.buttonSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String fname = binding.editTextFirstName.getText().toString();
-                String lname = binding.editTextLastName.getText().toString();
-                String email = binding.editTextEmail.getText().toString();
-                String password = binding.editTextPassword.getText().toString();
-                if (fname.isEmpty() || lname.isEmpty() || email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(getActivity(), "Please fill all fields", Toast.LENGTH_SHORT).show();
-                } else {
-                    RequestBody formBody = new FormBody.Builder()
-                            .add(Constansts.EMAIL, email)
-                            .add(Constansts.PASSWORD, password)
-                            .add(Constansts.FNAME, fname)
-                            .add(Constansts.LNAME, lname)
-                            .build();
-                    Request request = new Request.Builder()
-                            .url(Constansts.LOGIN_API_URL)
-                            .post(formBody)
-                            .build();
+        binding.buttonSubmit.setOnClickListener(view2 -> {
+            String fname = binding.editTextFirstName.getText().toString();
+            String lname = binding.editTextLastName.getText().toString();
+            String email = binding.editTextEmail.getText().toString();
+            String password = binding.editTextPassword.getText().toString();
+            if (fname.isEmpty() || lname.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(getActivity(), "Please fill all fields", Toast.LENGTH_SHORT).show();
+            } else {
+                RequestBody formBody = new FormBody.Builder()
+                        .add(Constansts.EMAIL, email)
+                        .add(Constansts.PASSWORD, password)
+                        .add(Constansts.FNAME, fname)
+                        .add(Constansts.LNAME, lname)
+                        .build();
+                Request request = new Request.Builder()
+                        .url(Constansts.LOGIN_API_URL)
+                        .post(formBody)
+                        .build();
 
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                            e.printStackTrace();
-                        }
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        e.printStackTrace();
+                    }
 
-                        @Override
-                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                            if (response.isSuccessful()) {
-                                String body = response.body().string();
-                                Log.d("demo", "onResponse: " + body);
-                                try {
-                                    JSONObject jsonObject = new JSONObject(body);
-                                    Auth auth = new Auth(jsonObject);
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        if (response.isSuccessful()) {
+                            String body = response.body().string();
+                            Log.d("demo", "onResponse: " + body);
+                            try {
+                                JSONObject jsonObject = new JSONObject(body);
+                                Auth auth = new Auth(jsonObject);
 
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            mListener.authSuccessful(auth);
-                                        }
-                                    });
-                                } catch (JSONException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            } else {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(getActivity(), "Unable to signup !!", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                getActivity().runOnUiThread(() -> mListener.authSuccessful(auth));
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
                             }
+                        } else {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getActivity(), "Unable to signup !!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
-                    });
-
-
-                }
+                    }
+                });
             }
         });
     }

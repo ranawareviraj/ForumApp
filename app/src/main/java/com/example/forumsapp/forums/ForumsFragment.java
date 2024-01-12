@@ -36,7 +36,6 @@ import static com.example.forumsapp.utils.Constansts.*;
 
 public class ForumsFragment extends Fragment {
 
-
     public ForumsFragment() {
         // Required empty public constructor
     }
@@ -75,19 +74,9 @@ public class ForumsFragment extends Fragment {
         getActivity().setTitle(FORUMS_FRAGMENT_TITLE);
 
         binding.textViewWelcome.setText("Welcome " + mAuth.getUser_fname() + " " + mAuth.getUser_lname());
-        binding.buttonCreateForum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.gotoCreateForum();
-            }
-        });
+        binding.buttonCreateForum.setOnClickListener(view1 -> mListener.gotoCreateForum());
 
-        binding.buttonLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.logout();
-            }
-        });
+        binding.buttonLogout.setOnClickListener(view2 -> mListener.logout());
 
         adapter = new ForumsAdapter();
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -126,12 +115,7 @@ public class ForumsFragment extends Fragment {
                             forums.add(forum);
                         }
 
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                adapter.notifyDataSetChanged();
-                            }
-                        });
+                        getActivity().runOnUiThread(() -> adapter.notifyDataSetChanged());
 
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
@@ -148,7 +132,9 @@ public class ForumsFragment extends Fragment {
         @NonNull
         @Override
         public ForumsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new ForumsViewHolder(ForumRowItemBinding.inflate(getLayoutInflater(), parent, false));
+            return new ForumsViewHolder(ForumRowItemBinding.inflate(getLayoutInflater(),
+                    parent,
+                    false));
         }
 
         @Override
@@ -169,12 +155,7 @@ public class ForumsFragment extends Fragment {
             public ForumsViewHolder(ForumRowItemBinding mBinding) {
                 super(mBinding.getRoot());
                 this.mBinding = mBinding;
-                mBinding.getRoot().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mListener.gotoForumMessages(mForum);
-                    }
-                });
+                mBinding.getRoot().setOnClickListener(view -> mListener.gotoForumMessages(mForum));
             }
 
             void setupUI(Forum forum) {
@@ -184,49 +165,35 @@ public class ForumsFragment extends Fragment {
                 mBinding.textViewForumCreatorName.setText(forum.getCreatedByFname() + " " + forum.getCreatedByLname());
                 if (mForum.getCreatedByUserId().equals(mAuth.getUser_id())) {
                     mBinding.imageViewDeleteForum.setVisibility(View.VISIBLE);
-                    mBinding.imageViewDeleteForum.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //code to delete the forum..
-                            String url = DELETE_THREAD_URL + mForum.getThread_id();
-                            Request request = new Request.Builder()
-                                    .url(url)
-                                    .addHeader("Authorization", "BEARER " + mAuth.getToken())
-                                    .build();
+                    mBinding.imageViewDeleteForum.setOnClickListener(v -> {
+                        //code to delete the forum..
+                        String url = DELETE_THREAD_URL + mForum.getThread_id();
+                        Request request = new Request.Builder()
+                                .url(url)
+                                .addHeader("Authorization", "BEARER " + mAuth.getToken())
+                                .build();
 
-                            client.newCall(request).enqueue(new Callback() {
-                                @Override
-                                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                                    e.printStackTrace();
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            @Override
+                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                if (response.isSuccessful()) {
+                                    getActivity().runOnUiThread(() -> getForums());
+
+                                } else {
+                                    getActivity().runOnUiThread(() -> Toast.makeText(getActivity(),
+                                            "Error deleting forum!!", Toast.LENGTH_SHORT).show());
                                 }
-
-                                @Override
-                                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                                    if (response.isSuccessful()) {
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                getForums();
-                                            }
-                                        });
-
-                                    } else {
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(getActivity(), "Error deleting forum!!", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    }
-                                }
-                            });
-
-                        }
+                            }
+                        });
                     });
                 } else {
                     mBinding.imageViewDeleteForum.setVisibility(View.INVISIBLE);
                 }
-
             }
         }
     }

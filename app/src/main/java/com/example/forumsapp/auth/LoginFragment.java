@@ -54,65 +54,48 @@ public class LoginFragment extends Fragment {
 
         binding.editTextEmail.setText("");
         binding.editTextPassword.setText("");
-        binding.buttonCreateNewAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.gotoRegister();
-            }
-        });
-        binding.buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String email = binding.editTextEmail.getText().toString();
-                String password = binding.editTextPassword.getText().toString();
-                if (email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(getContext(), "Please enter email and password", Toast.LENGTH_SHORT).show();
-                } else {
-                    //perform the login ..
-                    RequestBody formBody = new FormBody.Builder()
-                            .add(Constansts.EMAIL, email)
-                            .add(Constansts.PASSWORD, password)
-                            .build();
-                    Request request = new Request.Builder()
-                            .url(Constansts.LOGIN_API_URL)
-                            .post(formBody)
-                            .build();
+        binding.buttonCreateNewAccount.setOnClickListener(view1 -> mListener.gotoRegister());
+        binding.buttonLogin.setOnClickListener(view2 -> {
+            String email = binding.editTextEmail.getText().toString();
+            String password = binding.editTextPassword.getText().toString();
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(getContext(), "Please enter email and password", Toast.LENGTH_SHORT).show();
+            } else {
+                //perform the login ..
+                RequestBody formBody = new FormBody.Builder()
+                        .add(Constansts.EMAIL, email)
+                        .add(Constansts.PASSWORD, password)
+                        .build();
+                Request request = new Request.Builder()
+                        .url(Constansts.LOGIN_API_URL)
+                        .post(formBody)
+                        .build();
 
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                            e.printStackTrace();
-                        }
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        e.printStackTrace();
+                    }
 
-                        @Override
-                        public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                            if (response.isSuccessful()) {
-                                String body = response.body().string();
-                                Log.d("demo", "onResponse: " + body);
-                                try {
-                                    JSONObject jsonObject = new JSONObject(body);
-                                    Auth auth = new Auth(jsonObject);
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        if (response.isSuccessful()) {
+                            String body = response.body().string();
+                            Log.d("demo", "onResponse: " + body);
+                            try {
+                                JSONObject jsonObject = new JSONObject(body);
+                                Auth auth = new Auth(jsonObject);
 
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            mListener.authSuccessful(auth);
-                                        }
-                                    });
-                                } catch (JSONException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            } else {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(getActivity(), "Unable to login !!", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                getActivity().runOnUiThread(() -> mListener.authSuccessful(auth));
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
                             }
+                        } else {
+                            getActivity().runOnUiThread(() -> Toast.makeText(getActivity(),
+                                    "Unable to login !!", Toast.LENGTH_SHORT).show());
                         }
-                    });
-                }
+                    }
+                });
             }
         });
     }

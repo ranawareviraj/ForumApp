@@ -33,6 +33,7 @@ public class Constansts {
     public static final String GET_FORUMS_URL = "https://www.theappsdr.com/api/threads";
     public static final String LOGIN_API_URL = "https://www.theappsdr.com/api/login";
     public static final String REGISTER_API_URL = "https://www.theappsdr.com/api/register";
+    public static final String GET_MESSAGES_URL = "https://www.theappsdr.com/api/messages/";
 
     // Fragment titles
     public static final String FORUM_MESSAGES_FRAGMENT_TITLE = "Forum Messages";

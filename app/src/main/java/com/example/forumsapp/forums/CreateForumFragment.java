@@ -35,7 +35,6 @@ public class CreateForumFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     Auth mAuth;
 
     public static CreateForumFragment newInstance(Auth auth) {
